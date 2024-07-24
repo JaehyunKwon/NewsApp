@@ -2,6 +2,7 @@ package com.test.mobile.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getColor
@@ -19,7 +20,7 @@ class NewsAdapter
 constructor(): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     lateinit var context: Context
     private val items: MutableList<Articles> = arrayListOf()
-    private var selectedPosition: Int? = null
+    private val selectedPositions: SparseBooleanArray = SparseBooleanArray() // 선택된 위치들을 저장할 SparseBooleanArray
 
     override fun getItemViewType(position: Int): Int {
         return position
@@ -58,15 +59,21 @@ constructor(): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             binding.title.text = item.title
             binding.time.text = convertDateTime(item.publishedAt)
 
-            if (selectedPosition == position) {
+            if (selectedPositions.get(position, false)) {
                 binding.title.setTextColor(getColor(context, android.R.color.holo_red_dark))
             } else {
                 binding.title.setTextColor(getColor(context, android.R.color.darker_gray))
             }
 
             binding.root.setOnClickListener {
-                selectedPosition = position
-                notifyDataSetChanged()
+                // 선택된 위치를 SparseBooleanArray에 추가 또는 제거
+                if (selectedPositions.get(position, false)) {
+                    selectedPositions.delete(position)
+                } else {
+                    selectedPositions.put(position, true)
+                }
+                notifyItemChanged(position) // 클릭된 항목의 색상을 변경
+
                 val intent = Intent(context, WebViewActivity::class.java).apply {
                     putExtra("url", item.url)
                 }
