@@ -1,0 +1,55 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    ext.kotlin_version = "1.7.10"
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:7.3.1"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:2.39.1"
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+subprojects {
+    repositories {
+        google()
+        mavenCentral()
+        //jcenter() // Warning: this repository is going to shut down soon
+    }
+
+    configurations {
+        ktlint
+    }
+
+    afterEvaluate { project ->
+        check.dependsOn ktlint
+    }
+
+    dependencies {
+        ktlint "com.pinterest:ktlint:0.42.1"
+    }
+
+    // 스타일을 검사하는 태스크
+    task ktlint(type: JavaExec, group: "verification") {
+        description = "Check Kotlin code style."
+        classpath = configurations.ktlint
+        main = "com.pinterest.ktlint.Main"
+        args "src/**/*.kt"
+    }
+
+    /** 스타일 수정 후 자동으로 수정해 줌 */
+    task ktlintFormat(type: JavaExec, group: "formatting") {
+        description = "Fix Kotlin code style deviations."
+        classpath = configurations.ktlint
+        main = "com.pinterest.ktlint.Main"
+        args "-F", "src/**/*.kt"
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
