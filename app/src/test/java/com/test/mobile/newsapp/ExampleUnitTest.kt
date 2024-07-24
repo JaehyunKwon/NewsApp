@@ -1,5 +1,6 @@
 package com.test.mobile.newsapp
 
+import com.test.mobile.extensions.convertDateTime
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -13,5 +14,11 @@ class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
+    }
+
+    @Test
+    fun convertDate() {
+        val date = convertDateTime("2024-07-23T12:25:00Z")
+        println("====$date====")
     }
 }
