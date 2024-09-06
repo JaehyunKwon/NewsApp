@@ -19,3 +19,9 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-keep public class com.test.mobile.NewsAppApplication { *; }
+# Hilt 관련 ProGuard 규칙
+-dontwarn dagger.hilt.**
+-keep class dagger.hilt.** { *; }
+-keep class * extends dagger.hilt.internal.GeneratedComponentManager { *; }
+-keep class * extends dagger.hilt.internal.GeneratedComponent { *; }

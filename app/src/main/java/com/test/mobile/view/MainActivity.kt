@@ -1,19 +1,22 @@
 package com.test.mobile.view
 
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.remember.mobile.newsapp.R
-import com.remember.mobile.newsapp.databinding.ActivityMainBinding
-import com.remember.mobile.test.base.BaseActivity
+import com.test.mobile.base.BaseActivity
 import com.test.mobile.adapter.NewsAdapter
 import com.test.mobile.extensions.screenWidthDp
+import com.test.mobile.R
+import com.test.mobile.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>() {
+
+    override val bindingInflater: (LayoutInflater) -> ActivityMainBinding
+        get() = ActivityMainBinding::inflate
 
     override val layoutId: Int get() = R.layout.activity_main
 
@@ -36,9 +39,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         viewModel.getNews()
     }
 
-    override fun initDataBinding() {
-        viewModel.newsListLiveData.observe(this) { users ->
-            newsAdapter.submitList(users)
+    override fun initObserving() {
+        viewModel.newsListLiveData.observe(this) { data ->
+            newsAdapter.submitList(data)
         }
 
         viewModel.isLoading.observe(this) { isLoading ->

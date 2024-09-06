@@ -7,9 +7,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
-import com.remember.mobile.newsapp.databinding.ItemNewsBinding
 import com.test.mobile.extensions.convertDateTime
+import com.test.mobile.extensions.loadImageUrl
 import com.test.mobile.network.request.Articles
+import com.test.mobile.databinding.ItemNewsBinding
 import com.test.mobile.view.WebViewActivity
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -55,7 +56,7 @@ constructor(): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         private val binding: ItemNewsBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Articles, position: Int) {
-            binding.imageUrl = item.urlToImage
+            binding.image.loadImageUrl(item.urlToImage)
             binding.title.text = item.title
             binding.time.text = convertDateTime(item.publishedAt)
 
@@ -79,8 +80,6 @@ constructor(): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 }
                 context.startActivity(intent)
             }
-
-            binding.executePendingBindings()
         }
     }
 }

@@ -1,13 +1,16 @@
-package com.remember.mobile.test.base
+package com.test.mobile.base
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModel
+import androidx.viewbinding.ViewBinding
 
-abstract class BaseActivity<T: ViewDataBinding> : AppCompatActivity() {
-    lateinit var binding: T
+abstract class BaseActivity<T: ViewBinding> : AppCompatActivity() {
+    private var _binding: T? = null
+    protected val binding: T
+        get() = _binding!!
+
+    abstract val bindingInflater: (layoutInflater: android.view.LayoutInflater) -> T
 
     /**
      * setContentView로 호출할 Layout의 리소스 Id.
@@ -29,22 +32,19 @@ abstract class BaseActivity<T: ViewDataBinding> : AppCompatActivity() {
 
     /**
      * 두번째로 호출.
-     * 데이터 바인딩 및 rxjava 설정.
-     * ex)  observe, databinding observe..
+     * LiveData observe 설정
      */
-    abstract fun initDataBinding()
+    abstract fun initObserving()
 
     abstract fun onEvent()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // 초기화된 layoutResId로 databinding 객체 생성
-        binding = DataBindingUtil.setContentView(this, layoutId)
-        // live data를 사용하기 위해 해줘야함
-        binding.lifecycleOwner = this@BaseActivity
+        _binding = bindingInflater.invoke(layoutInflater)
+        setContentView(binding.root)
 
         initView()
         onEvent()
-        initDataBinding()
+        initObserving()
     }
 }

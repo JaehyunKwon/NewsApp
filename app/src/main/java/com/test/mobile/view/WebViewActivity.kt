@@ -5,16 +5,19 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.net.http.SslError
 import android.util.Log
-import android.view.View
+import android.view.LayoutInflater
 import android.webkit.*
 import androidx.activity.viewModels
-import com.remember.mobile.newsapp.R
-import com.remember.mobile.newsapp.databinding.ActivityWebViewBinding
-import com.remember.mobile.test.base.BaseActivity
+import com.test.mobile.base.BaseActivity
+import com.test.mobile.R
+import com.test.mobile.databinding.ActivityWebViewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
+
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> ActivityWebViewBinding
+        get() = ActivityWebViewBinding::inflate
 
     override val layoutId: Int get() = R.layout.activity_web_view
 
@@ -31,7 +34,7 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
         }
     }
 
-    override fun initDataBinding() {
+    override fun initObserving() {
     }
 
     override fun onEvent() {
